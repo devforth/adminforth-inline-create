@@ -1,21 +1,52 @@
 {
-  "name": "adminforth-inline-create",
-  "version": "1.0.2",
+  "name": "@adminforth/inline-create",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc && rsync -av --exclude 'node_modules' custom dist/ && npm version patch"
+    "prepare": "npm link adminforth",
+    "build": "tsc && rsync -av --exclude 'node_modules' custom dist/"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@types/node": "latest",
-    "typescript": "^5.7.3"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devforth/adminforth-inline-create.git"
   },
+  "keywords": ["adminforth", "inline create"],
+  "author": "devforth",
+  "license": "MIT",
+  "description": "Inline create plugin for adminforth",
   "dependencies": {
     "adminforth": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "semantic-release": "^24.2.1",
+    "semantic-release-slack-bot": "^4.0.2",
+    "typescript": "^5.7.3"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      [
+        "semantic-release-slack-bot",
+        {
+          "notifyOnSuccess": true,
+          "notifyOnFail": true,
+          "slackIcon": ":package:",
+          "markdownReleaseNotes": true
+        }
+      ]
+    ],
+    "branches": [
+      "main",
+      {
+        "name": "next",
+        "prerelease": true
+      }
+    ]
   }
 }

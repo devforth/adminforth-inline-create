@@ -73,15 +73,13 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
         
         const resource = this.adminforth.config.resources.find(r => r.resourceId === resourceId);
         
-        // Create a new record object with only valid database columns
-        const cleanRecord = {};
-        
-        for (const field of resource.columns) {
-          
+        const cleanRecord = resource.columns.reduce((acc, field) => {
           if (record[field.name] !== undefined && record[field.name] !== null) {
-            cleanRecord[field.name] = record[field.name];
+            acc[field.name] = record[field.name];
           }
-        }
+          return acc;
+        }, {});
+        
         const result = await this.adminforth.createResourceRecord({
           resource,
           record: cleanRecord,

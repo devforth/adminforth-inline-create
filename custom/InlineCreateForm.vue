@@ -72,31 +72,21 @@
   const invalidFields = ref({});
   const emptyFields = ref({});
 
-  console.log("visibleColumns", coreStore.resource.columns);
-  
-
-  // Determine which columns should be editable
   const visibleColumns = computed(() => 
     coreStore.resource.columns.filter(c => !c.backendOnly && c.showIn?.create !== false && !c.primaryKey)
   );
 
-  console.log("visibleColumns", visibleColumns.value);
-
   const allVisibleColumns = computed(() => {
-    // Create a Map using column name as key to remove duplicates
     const columnsMap = new Map();
     
-    // Add all visible columns
     coreStore.resource.columns.filter(c => c.showIn?.list).forEach(column => {
       columnsMap.set(column.label, column);
     });
     
-    // Add all editable columns
     visibleColumns.value.forEach(column => {
       columnsMap.set(column.label, column);
     });
     
-    // Convert Map values back to array
     return Array.from(columnsMap.values());
   });
 
