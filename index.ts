@@ -13,7 +13,6 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
   async modifyResourceConfig(adminforth: IAdminForth, resourceConfig: AdminForthResource) {
     super.modifyResourceConfig(adminforth, resourceConfig);
 
-    // Add custom component injection for inline create form
     if (!resourceConfig.options.pageInjections) {
       resourceConfig.options.pageInjections = {};
     }
@@ -22,7 +21,6 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
       resourceConfig.options.pageInjections.list = {};
     }
 
-    // Set as array of component declarations
     resourceConfig.options.pageInjections.list.tableBodyStart = [{
       file: this.componentPath('InlineCreateForm.vue'),
       meta: {
