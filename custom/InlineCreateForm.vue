@@ -1,11 +1,11 @@
 <template>
   <template v-if="isCreating">
     <td class="px-4 py-2"></td>
-    <td v-for="column in allVisibleColumns" :key="column.name" class="px-4 py-2">
+    <td v-for="column in allVisibleColumns" :key="column.name" class="px-2 md:px-3 lg:px-6 py-2">
       <div v-if="isEditableColumn(column)" class="flex gap-2">
         <ColumnValueInputWrapper
           ref="input"
-          class=""
+          class="min-w-24"
           :source="'create'"
           :column="column"
           :currentValues="formData"
@@ -13,7 +13,9 @@
           :columnOptions="columnOptions"
           :unmasked="unmasked"
           :setCurrentValue="setCurrentValue"
+          @update:unmasked="handleUnmasked"
         />
+        <div v-if="column.required?.create" ><IconExclamationCircleSolid class="w-4 h-4"/></div>
       </div>
       <div v-else></div>
     </td>
@@ -57,7 +59,6 @@
   import { IconCheckOutline, IconXOutline, IconPlusOutline, IconExclamationCircleSolid} from '@iconify-prerendered/vue-flowbite';
   import { computedAsync } from '@vueuse/core';
   import { useRouter } from 'vue-router';
-  import { Tooltip } from '@/afcl';
   
   const props = defineProps(['meta']);
   const emit = defineEmits(['update:records']);
@@ -75,6 +76,9 @@
   const visibleColumns = computed(() => 
     coreStore.resource.columns.filter(c => !c.backendOnly && c.showIn?.create !== false && !c.primaryKey)
   );
+  function handleUnmasked(columnName) {
+    unmasked.value[columnName] = !unmasked.value[columnName];
+  }
 
   const allVisibleColumns = computed(() => {
     const columnsMap = new Map();
