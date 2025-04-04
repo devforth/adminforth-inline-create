@@ -15,7 +15,7 @@
           :setCurrentValue="setCurrentValue"
           @update:unmasked="handleUnmasked"
         />
-        <div v-if="column.required?.create" ><IconExclamationCircleSolid class="w-4 h-4"/></div>
+        <div v-if="column.required?.create" class="pt-3" ><IconExclamationCircleSolid class="w-4 h-4 opacity-50" :title="t('This field is required')" /></div>
       </div>
       <div v-else></div>
     </td>
