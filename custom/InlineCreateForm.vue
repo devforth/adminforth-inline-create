@@ -36,7 +36,7 @@
     </td>
   </template>
   <template v-else>
-    <td :colspan="visibleColumns.length + 1" class="px-4 py-2">
+    <td :colspan="100" class="px-4 py-2">
       <button 
         @click="startCreate"
         class="w-full text-left text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
