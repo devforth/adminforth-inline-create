@@ -19,7 +19,7 @@
   "author": "devforth",
   "license": "MIT",
   "description": "Inline create plugin for adminforth",
-  "dependencies": {
+  "peerDependencies": {
     "adminforth": "latest"
   },
   "devDependencies": {
