@@ -15,12 +15,15 @@
     "type": "git",
     "url": "https://github.com/devforth/adminforth-inline-create.git"
   },
-  "keywords": ["adminforth", "inline create"],
+  "keywords": [
+    "adminforth",
+    "inline create"
+  ],
   "author": "devforth",
   "license": "MIT",
   "description": "Inline create plugin for adminforth",
   "peerDependencies": {
-    "adminforth": "latest"
+    "adminforth": "^2.13.0-next.51"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
