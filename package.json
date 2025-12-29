@@ -23,7 +23,7 @@
   "license": "MIT",
   "description": "Inline create plugin for adminforth",
   "peerDependencies": {
-    "adminforth": "^2.13.0-next.51"
+    "adminforth": "next"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
