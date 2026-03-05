@@ -5,7 +5,6 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "prepare": "npm link adminforth",
     "build": "tsc && rsync -av --exclude 'node_modules' custom dist/"
   },
   "publishConfig": {
@@ -23,7 +22,7 @@
   "license": "MIT",
   "description": "Inline create plugin for adminforth",
   "peerDependencies": {
-    "adminforth": "next"
+    "adminforth": "^2.24.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
@@ -40,6 +39,7 @@
       [
         "semantic-release-slack-bot",
         {
+          "packageName": "@adminforth/inline-create",
           "notifyOnSuccess": true,
           "notifyOnFail": true,
           "slackIcon": ":package:",
