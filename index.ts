@@ -66,7 +66,7 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
     server.endpoint({
       method: 'POST',
       path: `/plugin/${this.pluginInstanceId}/create`,
-      handler: async ({ body, adminforth, adminUser }) => {
+      handler: async ({ body, adminUser }) => {
         const { record, resourceId } = body;
         
         const resource = this.adminforth.config.resources.find(r => r.resourceId === resourceId);
