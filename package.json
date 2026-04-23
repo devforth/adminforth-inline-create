@@ -19,7 +19,7 @@
     "adminforth",
     "inline create"
   ],
-  "author": "devforth",
+  "author": "DevForth (https://devforth.io)",
   "license": "MIT",
   "description": "Inline create plugin for adminforth",
   "peerDependencies": {
