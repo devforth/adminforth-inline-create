@@ -1,11 +1,11 @@
 <template>
   <template v-if="isCreating">
     <td class="px-4 py-2"></td>
-    <td v-for="column in allVisibleColumns" :key="column.name" class="px-2 md:px-3 lg:px-6 py-2">
-      <div v-if="isEditableColumn(column)" class="flex gap-2">
+    <td v-for="column in allVisibleColumns" :key="column.name" class="af-ic-cell px-2 py-2">
+      <div v-if="isEditableColumn(column)" class="flex gap-1 items-start">
         <ColumnValueInputWrapper
           ref="input"
-          class="min-w-24"
+          class="w-full min-w-0"
           :source="'create'"
           :column="column"
           :currentValues="formData"
@@ -15,7 +15,14 @@
           :setCurrentValue="setCurrentValue"
           @update:unmasked="handleUnmasked"
         />
-        <div v-if="column.required?.create" class="pt-3" ><IconExclamationCircleSolid class="w-4 h-4 opacity-50" :title="t('This field is required')" /></div>
+        <div v-if="column.required?.create" class="pt-3 shrink-0" ><IconExclamationCircleSolid class="w-4 h-4 opacity-50" :title="t('This field is required')" /></div>
+      </div>
+      <div
+        v-else-if="hasCustomCreateComponent(column)"
+        class="text-xs text-gray-400 dark:text-gray-500 italic"
+        :title="t('Editable after creation')"
+      >
+        {{ t('After creation') }}
       </div>
       <div v-else></div>
     </td>
@@ -80,23 +87,16 @@
     unmasked.value[columnName] = !unmasked.value[columnName];
   }
 
-  const allVisibleColumns = computed(() => {
-    const columnsMap = new Map();
-    
-    coreStore.resource.columns.filter(c => c.showIn?.list).forEach(column => {
-      columnsMap.set(column.label, column);
-    });
-    
-    visibleColumns.value.forEach(column => {
-      columnsMap.set(column.label, column);
-    });
-    
-    return Array.from(columnsMap.values());
-  });
+  const allVisibleColumns = computed(() =>
+    coreStore.resource.columns.filter(c => c.showIn?.list)
+  );
 
-  // Function to check if a column should be editable
+  function hasCustomCreateComponent(column) {
+    return !!column.components?.create;
+  }
+
   function isEditableColumn(column) {
-    return !column.backendOnly && column.showIn?.create !== false && !column.primaryKey;
+    return !column.backendOnly && column.showIn?.create !== false && !column.primaryKey && !hasCustomCreateComponent(column);
   }
   
   const columnOptions = computedAsync(async () => { 
@@ -219,3 +219,16 @@
     }
   }
   </script>
+
+  <style scoped>
+  .af-ic-cell :deep(input),
+  .af-ic-cell :deep(textarea),
+  .af-ic-cell :deep(.w-40) {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .af-ic-cell :deep(textarea) {
+    min-height: 2.5rem;
+    max-height: 4rem;
+  }
+  </style>
