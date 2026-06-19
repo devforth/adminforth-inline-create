@@ -69,6 +69,9 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
       handler: async ({ body, adminUser }) => {
         const { record, resourceId } = body;
         
+        if ( this.resourceConfig.resourceId !== resourceId) {
+          return { error: 'Resource ID mismatch' };
+        }
         const resource = this.adminforth.config.resources.find(r => r.resourceId === resourceId);
         
         const cleanRecord = resource.columns.reduce((acc, field) => {
