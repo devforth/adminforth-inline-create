@@ -1,4 +1,4 @@
-import { AdminForthPlugin } from "adminforth";
+import { ActionCheckSource, AdminForthPlugin, interpretResource } from "adminforth";
 import type { IAdminForth, IHttpServer, AdminForthResourcePages, AdminForthResourceColumn, AdminForthDataTypes, AdminForthResource } from "adminforth";
 import type { PluginOptions } from './types.js';
 
@@ -72,8 +72,22 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
         if ( this.resourceConfig.resourceId !== resourceId) {
           return { error: 'Resource ID mismatch' };
         }
+
         const resource = this.adminforth.config.resources.find(r => r.resourceId === resourceId);
-        
+
+        const { allowedActions } = await interpretResource(adminUser, resource, {}, ActionCheckSource.DisplayButtons, this.adminforth);
+        if (!allowedActions.create) {
+          return { error: 'User does not have permission to create records for this resource' };
+        }
+
+        for (const column of resource.columns) {
+          if (column.backendOnly) {
+            if (record[column.name] !== undefined) {
+              return { error: `Column "${column.name}" is backend-only and cannot be set by the user` };
+            }
+          };
+        }
+
         const cleanRecord = resource.columns.reduce((acc, field) => {
           if (record[field.name] !== undefined && record[field.name] !== null) {
             acc[field.name] = record[field.name];
