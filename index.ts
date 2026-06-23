@@ -9,7 +9,7 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
     super(options, import.meta.url);
     this.options = options;
   }
-
+ 
   async modifyResourceConfig(adminforth: IAdminForth, resourceConfig: AdminForthResource) {
     super.modifyResourceConfig(adminforth, resourceConfig);
 
