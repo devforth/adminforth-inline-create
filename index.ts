@@ -21,6 +21,10 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
       resourceConfig.options.pageInjections.list = {};
     }
 
+    if (this.resourceConfig.options.allowedActions.create === false) {
+      throw new Error(`InlineCreatePlugin cannot be used on resource "${resourceConfig.resourceId}" because create action is disabled`);
+    }
+
     resourceConfig.options.pageInjections.list.tableBodyStart = [{
       file: this.componentPath('InlineCreateForm.vue'),
       meta: {
