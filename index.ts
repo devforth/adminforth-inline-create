@@ -72,7 +72,11 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
       path: `/plugin/${this.pluginInstanceId}/create`,
       handler: async ({ body, adminUser }) => {
         const { record, resourceId } = body;
-        
+
+        if (!record) {
+          return { error: 'No record provided' };
+        }
+
         if ( this.resourceConfig.resourceId !== resourceId) {
           return { error: 'Resource ID mismatch' };
         }
