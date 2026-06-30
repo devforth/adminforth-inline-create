@@ -25,6 +25,9 @@
   "peerDependencies": {
     "adminforth": "^3.6.21"
   },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
     "@types/node": "^22.10.7",
     "adminforth": "^3.6.21",

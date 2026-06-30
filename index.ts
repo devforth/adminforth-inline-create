@@ -1,6 +1,12 @@
 import { ActionCheckSource, AdminForthPlugin, interpretResource } from "adminforth";
 import type { IAdminForth, IHttpServer, AdminForthResourcePages, AdminForthResourceColumn, AdminForthDataTypes, AdminForthResource } from "adminforth";
 import type { PluginOptions } from './types.js';
+import { z } from "zod";
+
+const createBodySchema = z.object({
+  resourceId: z.string(),
+  record: z.record(z.string(), z.unknown()).nullish(),
+}).strict();
 
 export default class InlineCreatePlugin extends AdminForthPlugin {
   options: PluginOptions;
@@ -8,6 +14,19 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
   constructor(options: PluginOptions) {
     super(options, import.meta.url);
     this.options = options;
+  }
+
+  private parseBody<T>(
+    schema: z.ZodType<T>,
+    body: unknown,
+    response: { setStatus: (code: number, message: string) => void },
+  ): T | null {
+    const parsed = schema.safeParse(body ?? {});
+    if (!parsed.success) {
+      response.setStatus(422, parsed.error.message);
+      return null;
+    }
+    return parsed.data;
   }
 
   async modifyResourceConfig(adminforth: IAdminForth, resourceConfig: AdminForthResource) {
@@ -70,8 +89,10 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
     server.endpoint({
       method: 'POST',
       path: `/plugin/${this.pluginInstanceId}/create`,
-      handler: async ({ body, adminUser }) => {
-        const { record, resourceId } = body;
+      handler: async ({ body, adminUser, response }) => {
+        const data = this.parseBody(createBodySchema, body, response);
+        if (!data) return;
+        const { record, resourceId } = data;
 
         if (!record) {
           return { error: 'No record provided' };
