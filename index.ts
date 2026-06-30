@@ -1,6 +1,12 @@
-import { ActionCheckSource, AdminForthPlugin, interpretResource } from "adminforth";
+import { ActionCheckSource, AdminForthPlugin, parseBody, interpretResource } from "adminforth";
 import type { IAdminForth, IHttpServer, AdminForthResourcePages, AdminForthResourceColumn, AdminForthDataTypes, AdminForthResource } from "adminforth";
 import type { PluginOptions } from './types.js';
+import { z } from "zod";
+
+const createBodySchema = z.object({
+  resourceId: z.string(),
+  record: z.record(z.string(), z.unknown()).nullish(),
+}).strict();
 
 export default class InlineCreatePlugin extends AdminForthPlugin {
   options: PluginOptions;
@@ -70,8 +76,11 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
     server.endpoint({
       method: 'POST',
       path: `/plugin/${this.pluginInstanceId}/create`,
-      handler: async ({ body, adminUser }) => {
-        const { record, resourceId } = body;
+      handler: async ({ body, adminUser, response }) => {
+        const parsed = parseBody(createBodySchema, body, response);
+        if ('error' in parsed) return parsed.error;
+        const data = parsed.data;
+        const { record, resourceId } = data;
 
         if (!record) {
           return { error: 'No record provided' };
