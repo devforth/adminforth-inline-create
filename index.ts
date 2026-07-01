@@ -1,4 +1,4 @@
-import { ActionCheckSource, AdminForthPlugin, parseBody, interpretResource } from "adminforth";
+import { ActionCheckSource, AdminForthPlugin, interpretResource } from "adminforth";
 import type { IAdminForth, IHttpServer, AdminForthResourcePages, AdminForthResourceColumn, AdminForthDataTypes, AdminForthResource } from "adminforth";
 import type { PluginOptions } from './types.js';
 import { z } from "zod";
@@ -76,10 +76,9 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
     server.endpoint({
       method: 'POST',
       path: `/plugin/${this.pluginInstanceId}/create`,
-      handler: async ({ body, adminUser, response }) => {
-        const parsed = parseBody(createBodySchema, body, response);
-        if ('error' in parsed) return parsed.error;
-        const data = parsed.data;
+      request_schema: createBodySchema,
+      handler: async ({ body, adminUser }) => {
+        const data = body as z.infer<typeof createBodySchema>;
         const { record, resourceId } = data;
 
         if (!record) {
