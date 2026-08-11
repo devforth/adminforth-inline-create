@@ -120,7 +120,17 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
         if (result.error) {
           return { error: result.error };
         }
-        return { record: result.createdRecord };
+
+        const createdRecord = result.createdRecord;
+
+        //filter createdRecord to only include columns that are not backendOnly
+        const safe = {};
+        for (const col of resource.columns) {
+          if (col.backendOnly) continue;
+          if (col.showIn?.list === false && col.showIn?.show === false) continue;
+          safe[col.name] = result.createdRecord[col.name];
+        }
+        return { record: safe };
       }
     });
   }
