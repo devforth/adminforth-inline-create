@@ -1,4 +1,4 @@
-import { ActionCheckSource, AdminForthPlugin, interpretResource } from "adminforth";
+import { ActionCheckSource, AdminForthPlugin, interpretResource, recordWriteError, stripBackendOnly } from "adminforth";
 import type { IAdminForth, IHttpServer, AdminForthResourcePages, AdminForthResourceColumn, AdminForthDataTypes, AdminForthResource } from "adminforth";
 import type { PluginOptions } from './types.js';
 import { z } from "zod";
@@ -96,12 +96,17 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
           return { error: 'User does not have permission to create records for this resource' };
         }
 
-        for (const column of resource.columns) {
-          if (column.backendOnly) {
-            if (record[column.name] !== undefined) {
-              return { error: `Column "${column.name}" is backend-only and cannot be set by the user` };
-            }
-          };
+        const ctx = {
+          adminUser,
+          resource,
+          meta: { requestBody: body },
+          source: ActionCheckSource.CreateRequest,
+          adminforth: this.adminforth,
+        };
+
+        const writeError = await recordWriteError(record, 'create', ctx);
+        if (writeError) {
+          return { error: writeError };
         }
 
         const cleanRecord = resource.columns.reduce((acc, field) => {
@@ -121,15 +126,12 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
           return { error: result.error };
         }
 
-        const createdRecord = result.createdRecord;
-
-        //filter createdRecord to only include columns that are not backendOnly
-        const safe = {};
-        for (const col of resource.columns) {
-          if (col.backendOnly) continue;
-          if (col.showIn?.list === false && col.showIn?.show === false) continue;
-          safe[col.name] = result.createdRecord[col.name];
-        }
+        const pkColumn = resource.columns.find((col) => col.primaryKey);
+        const safe = await stripBackendOnly(result.createdRecord, {
+          ...ctx,
+          meta: { requestBody: body, pk: result.createdRecord[pkColumn.name] },
+          source: ActionCheckSource.ListRequest,
+        });
         return { record: safe };
       }
     });
