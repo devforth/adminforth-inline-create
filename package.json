@@ -23,7 +23,7 @@
   "license": "MIT",
   "description": "Inline create plugin for adminforth",
   "peerDependencies": {
-    "adminforth": "^3.8.2"
+    "adminforth": "^4.7.3"
   },
   "dependencies": {
     "zod": "^4.3.6"
