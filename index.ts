@@ -76,6 +76,7 @@ export default class InlineCreatePlugin extends AdminForthPlugin {
     server.endpoint({
       method: 'POST',
       path: `/plugin/${this.pluginInstanceId}/create`,
+      agent: { hiddenFromAgents: true },
       request_schema: createBodySchema,
       handler: async ({ body, adminUser }) => {
         const data = body as z.infer<typeof createBodySchema>;
