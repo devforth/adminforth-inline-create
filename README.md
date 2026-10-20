@@ -1,5 +1,7 @@
 # AdminForth Inline Create Plugin
 
+> **⚠️ Deprecated.** This plugin is no longer maintained and is not listed in the AdminForth documentation any more. Do not use it in new projects.
+
 <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /> <img src="https://woodpecker.devforth.io/api/badges/3848/status.svg" alt="Build Status" /> <a href="https://www.npmjs.com/package/@adminforth/inline-create"><img src="https://img.shields.io/npm/dm/@adminforth/inline-create" alt="npm downloads" /></a> <a href="https://www.npmjs.com/package/@adminforth/inline-create"><img src="https://img.shields.io/npm/v/@adminforth/inline-create" alt="npm version" /></a>
 
 [![Ask AI](https://tluma.ai/badge)](https://tluma.ai/ask-ai/devforth/adminforth)
@@ -12,12 +14,6 @@ Adds inline record creation to AdminForth list views.
 - Reduce interruptions in connected data workflows.
 - Speed up entry of linked records in AdminForth.
 - Keep inline creation close to the data being managed.
-
-## Documentation
-
-Full setup and configuration guide:
-
-[AdminForth Inline Create Documentation](https://adminforth.dev/docs/tutorial/Plugins/inline-create/)
 
 ## About AdminForth
 
